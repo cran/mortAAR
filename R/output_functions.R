@@ -1,0 +1,411 @@
+#' Checks if a variable is of class mortaar_life_table or mortaar_life_table_list
+#'
+#' Checks class membership.
+#'
+#' @param x a variable.
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @return true if x is a mortaar_life_table_list, otherwise false.
+#'
+#' @examples
+#' # Create a mortaar_life_table from a prepared dataset.
+#' class(schleswig_ma)
+#' is.mortaar_life_table(schleswig_ma)
+#'
+#' schleswig_1 <- life.table(schleswig_ma[c("a", "Dx")])
+#'
+#' class(schleswig_1)
+#' is.mortaar_life_table(schleswig_1)
+#'
+#' # Create a mortaar_life_table_list from two datasets.
+#' odagsen <- life.table(list(
+#'   "corpus mandibulae" = odagsen_cm[c("a", "Dx")],
+#'   "margo orbitalis" = odagsen_mo[c("a", "Dx")]
+#' ))
+#' is.mortaar_life_table_list(odagsen)
+#'
+#' @name is
+NULL
+
+#' @rdname is
+#' @export
+is.mortaar_life_table_list <- function(x, ...) {"mortaar_life_table_list" %in% class(x)}
+
+#' @rdname is
+#' @export
+is.mortaar_life_table <- function(x, ...) {"mortaar_life_table" %in% class(x)}
+
+#' Encode and print a mortaar_life_table or a mortaar_life_table_list
+#'
+#' Format for pretty printing.
+#'
+#' @param x a mortaar_life_table or a mortaar_life_table_list.
+#' @param class_of_deceased optional string, specify the class of deceased (male, female, phase, ...).
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @return A string representation of the mortaar_life_table or the mortaar_life_table_list.
+#' For format.mortaar_life_table_list each mortaar_life_table is formated by itself and
+#' strung together. The names of the elements are used to specify the name in the returned header
+#' of the printout.
+#'
+#' @examples
+#' # Create a mortaar_life_table from a prepared dataset.
+#' schleswig_1 <- life.table(schleswig_ma[c("a", "Dx")])
+#' print(schleswig_1)
+#'
+#' # Create a mortaar_life_table_list from two datasets.
+#' odagsen <- life.table(list(
+#'   "corpus mandibulae" = odagsen_cm[c("a", "Dx")],
+#'   "margo orbitalis" = odagsen_mo[c("a", "Dx")]
+#' ))
+#' print(odagsen)
+#'
+#' @importFrom utils capture.output
+#'
+#' @name print
+NULL
+
+#' @rdname print
+#' @export
+format.mortaar_life_table_list <- function(x, ...) {
+  return_value <- ""
+  list_names <- names(x)
+  group <- attributes(x)$group
+  for (i in 1:length(x)) {
+    my_life_table <- x[[i]]
+    # Pass the group name attribute to individual mortaar_life_tables.
+    if(is.null(group) %>% `!` && group %>% is.na %>% `!`) {
+      attr(my_life_table, "group") <- group
+    }
+    this_return_value <- format.mortaar_life_table(my_life_table, class_of_deceased = list_names[i], ...)
+    return_value <- paste(return_value, this_return_value,sep="\n",collapse="\n")
+  }
+  invisible(return_value)
+}
+
+#' @rdname print
+#' @export
+format.mortaar_life_table <- function(x, class_of_deceased = NULL, ...)
+{
+  out_str <- list()
+  class_of_deceased_str <- ""
+  if (!is.null(class_of_deceased)) {
+    group <- attributes(x)$group
+    class_of_deceased_str <- paste(" for", group, ": ", class_of_deceased, sep = "")
+  }
+  out_str$header <- paste("\n","\t mortAAR life table", class_of_deceased_str," (n = ",round(sum(x$Dx),2)," individuals)",sep = "")
+
+  out_str$e0 <- paste("\n","Life expectancy at birth (e0): ",round(x$ex[1],3), sep = "")
+
+  out_table <- data.frame(x)
+  numeric_cols <- sapply(out_table, is.numeric)
+  out_table[numeric_cols] <- round(x[numeric_cols], 3)
+
+  return_value <- paste(out_str,collapse = "\n",sep="")
+
+  return_value <- paste(return_value,"\n\n",paste(capture.output(print(out_table)),sep="",collapse = "\n"),sep="",collapse = "\n")
+
+  invisible(return_value)
+}
+
+#' @rdname print
+#' @export
+print.mortaar_life_table_list <- function(x, ...) cat(format(x, ...), "\n")
+
+#' @rdname print
+#' @export
+print.mortaar_life_table <- function(x, ...) cat(format(x, ...), "\n")
+
+#' Plot a mortaar_life_table or a mortaar_life_table_list
+#'
+#' Plot a mortaar_life_table or a mortaar_life_table_list. There are several different kinds of plots
+#' to explore the different variables. The parameter \code{display} allows to select the variables
+#' of interest.
+#'
+#' @param x a mortaar_life_table or a mortaar_life_table_list.
+#' @param display a character vector. Displays the calculated variables as plots. These must include
+#' some of the alternatives \code{dx} for the proportion of deaths, \code{qx} for the probability of
+#' death, \code{lx} for the survivorship, \code{ex} for the life expectancy and \code{rel_popx} for
+#' the population age structure.
+#' @param prefer.ggplot should ggplot be preferred, if available. Default to TRUE.
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @examples
+#' # Create a mortaar_life_table from a prepared dataset.
+#' schleswig_1 <- life.table(schleswig_ma[c("a", "Dx")])
+#' plot(schleswig_1)
+#' plot(schleswig_1, display = "qx")
+#'
+#' # Create a mortaar_life_table_list from two datasets.
+#' odagsen <- life.table(list(
+#'   "corpus mandibulae" = odagsen_cm[c("a", "Dx")],
+#'   "margo orbitalis" = odagsen_mo[c("a", "Dx")]
+#' ))
+#' plot(odagsen)
+#' plot(odagsen, display = "lx")
+#'
+#' @importFrom graphics axis grid legend lines par plot
+#'
+#' @name plot
+NULL
+
+#' @rdname plot
+#' @export
+plot.mortaar_life_table <- function(x, display = c("dx", "qx", "lx", "ex", "rel_popx"), prefer.ggplot=TRUE, ...) {
+  ask_before = par()$ask
+
+  if(length(display)>1) {
+    par(ask=T)
+  }
+
+  variable_labels <- make_variable_labels()
+
+  n <- sum(x$Dx)
+  my_subsets = "data set"
+  my_x <- x
+  my_x$dataset <- my_subsets
+
+  my_x<-list(dataset=my_x)
+
+
+  for (i in 1:length(display)) {
+    this_variable <- display[i]
+
+    if (prefer.ggplot==TRUE && requireNamespace("ggplot2", quietly = TRUE)) {
+      make_ggplot(my_x,this_variable, variable_labels)
+    } else {
+      eval(parse(text=paste("mortaar_plot_", this_variable, "_frame(my_x[[1]], my_subsets, n)", sep="")))
+      eval(parse(text=paste("mortaar_plot_", this_variable, "(my_x[[1]], lty=i)", sep="")))
+      grid()
+    }
+  }
+  par(ask=ask_before)
+  # }
+}
+
+#' @rdname plot
+#' @export
+plot.mortaar_life_table_list <- function(x, display = c("dx", "qx", "lx", "ex", "rel_popx"), prefer.ggplot=TRUE, ...){
+  ask_before = par()$ask
+
+  if(length(display)>1) {
+    par(ask=T)
+  }
+
+  variable_labels <- make_variable_labels()
+
+  my_subsets <- names(x)
+  n <- unlist(lapply(x, function(x){sum(x$Dx)}))
+  for (i in 1:length(display)) {
+    this_variable <- display[i]
+
+    if (prefer.ggplot==TRUE && requireNamespace("ggplot2", quietly = TRUE)) {
+      make_ggplot(x,this_variable, variable_labels)
+    } else {
+      eval(parse(text=paste("mortaar_plot_", this_variable, "_frame(x[[1]], my_subsets, n)", sep="")))
+      for(t in 1:length(x)){
+        eval(parse(text=paste("mortaar_plot_", this_variable, "(x[[t]], lty=i)", sep="")))
+      }
+      grid()
+    }
+  }
+  par(ask=ask_before)
+}
+
+#### helper function for plotting ####
+
+make_variable_labels <- function() {
+  variable_labels <- c(
+    "probability of death (qx)",
+    "proportion of deaths (dx)",
+    "survivorship (lx)",
+    "life expectancy (ex)",
+    "population age structure (rel_popx)"
+  )
+  names(variable_labels) <- c("qx", "dx", "lx", "ex", "rel_popx")
+  return(variable_labels)
+}
+
+make_ggplot <- function(data, variable_name, variable_labels) {
+  my_x <- reshape2::melt(data,id="a",measure.vars=c(variable_name))
+  colnames(my_x) <- c("a", "variable", variable_name, "dataset")
+  my_x$a <- unlist(by(my_x$a, my_x$dataset, function(x) cumsum(x)))
+  my_plot <- ggplot2::ggplot(my_x, ggplot2::aes_string(x="a",y=variable_name,lty="dataset"))
+  my_plot <- my_plot + ggplot2::geom_line() + ggplot2::xlab("age") + ggplot2::ylab(variable_name) + ggplot2::ggtitle(variable_labels[variable_name])
+  # check if group attribute is present to pass it on for plot legend title
+  group <- attributes(data)$group
+  if(is.null(group) %>% `!` && group %>% is.na %>% `!`) {my_plot <- my_plot +  ggplot2::guides(linetype=ggplot2::guide_legend(title=group))}
+  methods::show(my_plot)
+}
+
+#'Plots proportion of deaths dx for a single life table.
+#'
+#'Plots proportion of deaths dx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param lty line type, default to 1.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_dx <- function(x, lty=1, ...) {
+  my_x=cumsum(x$a)
+  lines(my_x,x$dx, lty=lty)
+}
+
+#'Plots a coordinate system for proportion of deaths dx for a single life table.
+#'
+#'Plots a coordinate system for proportion of deaths dx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param my_subsets a vector of categories from the sublist of mortaar_life_table.
+#'@param n number of individuals.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_dx_frame <- function(x, my_subsets="", n,...) {
+  my_x=cumsum(x$a)
+  plot(my_x,x$dx, xlab="age of individuals", ylab="dx",type="n", main="proportion of deaths (dx)", xaxt="n")
+  my_ticks = seq(0,ceiling(max(my_x)),by=5)
+  axis(1,at=my_ticks, labels=my_ticks)
+  legend(x = "topleft", bty='n', paste(my_subsets, " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
+
+#'Plots the probability of death qx for a single life table.
+#'
+#'Plots the probability of death qx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param lty line type, default to 1.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_qx <- function(x, lty=1, ...) {
+  my_x=cumsum(x$a)
+  lines(my_x,x$qx, lty=lty)
+}
+
+#'Plots a coordinate system for probability of death qx for a single life table.
+#'
+#'Plots a coordinate system for probability of death qx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param my_subsets a vector of categories from the sublist of mortaar_life_table.
+#'@param n number of individuals.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_qx_frame <- function(x, my_subsets="", n,...) {
+  my_x=cumsum(x$a)
+  plot(my_x,x$qx, xlab="age of individuals", ylab="qx",type="n", main="probability of death (qx)", xaxt="n")
+  my_ticks = seq(0,ceiling(max(my_x)),by=5)
+  axis(1,at=my_ticks, labels=my_ticks)
+  legend(x = "topleft", bty='n', paste(my_subsets, " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
+
+#'Plots the survivorship lx for a single life table.
+#'
+#'Plots the survivorship lx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param lty line type, default to 1.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_lx <- function(x, lty=1, ...) {
+  my_x=cumsum(x$a)
+  lines(my_x,x$lx, lty=lty)
+}
+
+#'Plots a coordinate system for survivorship lx for a single life table.
+#'
+#'Plots a coordinate system for survivorship lx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param my_subsets a vector of categories from the sublist of mortaar_life_table.
+#'@param n number of individuals.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+#'
+#'@keywords internal
+
+mortaar_plot_lx_frame <- function(x, my_subsets="", n,...) {
+  my_x=cumsum(x$a)
+  plot(my_x,x$lx, xlab="age of individuals", ylab="lx",type="n", main="survivorship (lx)", xaxt="n")
+  my_ticks = seq(0,ceiling(max(my_x)),by=5)
+  axis(1,at=my_ticks, labels=my_ticks)
+  legend(x = "topleft", bty='n', paste(my_subsets, " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
+
+#'Plots the life expectancy ex for a single life table.
+#'
+#'Plots the life expectancy ex for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param lty line type, default to 1.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_ex <- function(x, lty=1, ...) {
+  my_x=cumsum(x$a)
+  lines(my_x,x$ex, lty=lty)
+}
+
+#'Plots a coordinate system for life expectancy ex for a single life table.
+#'
+#'Plots a coordinate system for life expectancy ex for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param my_subsets a vector of categories from the sublist of mortaar_life_table.
+#'@param n number of individuals.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_ex_frame <- function(x, my_subsets="", n,...) {
+  my_x=cumsum(x$a)
+  plot(my_x,x$ex, xlab="age of individuals", ylab="ex",type="n", main="life expectancy (ex)", xaxt="n")
+  my_ticks = seq(0,ceiling(max(my_x)),by=5)
+  axis(1,at=my_ticks, labels=my_ticks)
+  legend(x = 'topright', bty='n', paste(my_subsets,  " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
+
+#'Plots the mortality rate rel_popx for a single life table.
+#'
+#'Plots the mortality rate rel_popx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param lty line type, default to 1.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_rel_popx <- function(x, lty=1, ...) {
+  my_x=cumsum(x$a)
+  lines(my_x,x$rel_popx, lty=lty)
+}
+
+#'Plots a coordinate system for mortality rate rel_popx for a single life table.
+#'
+#'Plots a coordinate system for mortality rate rel_popx for a single life table.
+#'
+#'@param x an object of the class mortaar_life_table.
+#'@param my_subsets a vector of categories from sublist of mortaar_life_table.
+#'@param n number of individuals.
+#'@param ... further arguments passed to the print function.
+#'
+#'@keywords internal
+
+mortaar_plot_rel_popx_frame <- function(x, my_subsets="", n,...) {
+  my_x=cumsum(x$a)
+  plot(my_x,x$rel_popx, xlab="age of individuals", ylab="rel_popx",type="n", main="population age structure (rel_popx)", xaxt="n")
+  my_ticks = seq(0,ceiling(max(my_x)),by=5)
+  axis(1,at=my_ticks, labels=my_ticks)
+  legend(x = 'topright', bty='n', paste(my_subsets, " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
