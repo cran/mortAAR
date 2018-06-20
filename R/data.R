@@ -1,6 +1,6 @@
 #' schleswig_ma: Life table example
 #'
-#' A life table from \emph{Hermann et. al 1990, 305}.
+#' A life table from \emph{Herrmann et. al 1990, 305}.
 #'
 #' This lifetable is compiled from a medieval grave collection from
 #' Schleswig (11th-13th century). More information can

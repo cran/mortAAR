@@ -1,121 +1,3 @@
-#' Checks if a variable is of class mortaar_life_table or mortaar_life_table_list
-#'
-#' Checks class membership.
-#'
-#' @param x a variable.
-#' @param ... further arguments passed to or from other methods.
-#'
-#' @return true if x is a mortaar_life_table_list, otherwise false.
-#'
-#' @examples
-#' # Create a mortaar_life_table from a prepared dataset.
-#' class(schleswig_ma)
-#' is.mortaar_life_table(schleswig_ma)
-#'
-#' schleswig_1 <- life.table(schleswig_ma[c("a", "Dx")])
-#'
-#' class(schleswig_1)
-#' is.mortaar_life_table(schleswig_1)
-#'
-#' # Create a mortaar_life_table_list from two datasets.
-#' odagsen <- life.table(list(
-#'   "corpus mandibulae" = odagsen_cm[c("a", "Dx")],
-#'   "margo orbitalis" = odagsen_mo[c("a", "Dx")]
-#' ))
-#' is.mortaar_life_table_list(odagsen)
-#'
-#' @name is
-NULL
-
-#' @rdname is
-#' @export
-is.mortaar_life_table_list <- function(x, ...) {"mortaar_life_table_list" %in% class(x)}
-
-#' @rdname is
-#' @export
-is.mortaar_life_table <- function(x, ...) {"mortaar_life_table" %in% class(x)}
-
-#' Encode and print a mortaar_life_table or a mortaar_life_table_list
-#'
-#' Format for pretty printing.
-#'
-#' @param x a mortaar_life_table or a mortaar_life_table_list.
-#' @param class_of_deceased optional string, specify the class of deceased (male, female, phase, ...).
-#' @param ... further arguments passed to or from other methods.
-#'
-#' @return A string representation of the mortaar_life_table or the mortaar_life_table_list.
-#' For format.mortaar_life_table_list each mortaar_life_table is formated by itself and
-#' strung together. The names of the elements are used to specify the name in the returned header
-#' of the printout.
-#'
-#' @examples
-#' # Create a mortaar_life_table from a prepared dataset.
-#' schleswig_1 <- life.table(schleswig_ma[c("a", "Dx")])
-#' print(schleswig_1)
-#'
-#' # Create a mortaar_life_table_list from two datasets.
-#' odagsen <- life.table(list(
-#'   "corpus mandibulae" = odagsen_cm[c("a", "Dx")],
-#'   "margo orbitalis" = odagsen_mo[c("a", "Dx")]
-#' ))
-#' print(odagsen)
-#'
-#' @importFrom utils capture.output
-#'
-#' @name print
-NULL
-
-#' @rdname print
-#' @export
-format.mortaar_life_table_list <- function(x, ...) {
-  return_value <- ""
-  list_names <- names(x)
-  group <- attributes(x)$group
-  for (i in 1:length(x)) {
-    my_life_table <- x[[i]]
-    # Pass the group name attribute to individual mortaar_life_tables.
-    if(is.null(group) %>% `!` && group %>% is.na %>% `!`) {
-      attr(my_life_table, "group") <- group
-    }
-    this_return_value <- format.mortaar_life_table(my_life_table, class_of_deceased = list_names[i], ...)
-    return_value <- paste(return_value, this_return_value,sep="\n",collapse="\n")
-  }
-  invisible(return_value)
-}
-
-#' @rdname print
-#' @export
-format.mortaar_life_table <- function(x, class_of_deceased = NULL, ...)
-{
-  out_str <- list()
-  class_of_deceased_str <- ""
-  if (!is.null(class_of_deceased)) {
-    group <- attributes(x)$group
-    class_of_deceased_str <- paste(" for", group, ": ", class_of_deceased, sep = "")
-  }
-  out_str$header <- paste("\n","\t mortAAR life table", class_of_deceased_str," (n = ",round(sum(x$Dx),2)," individuals)",sep = "")
-
-  out_str$e0 <- paste("\n","Life expectancy at birth (e0): ",round(x$ex[1],3), sep = "")
-
-  out_table <- data.frame(x)
-  numeric_cols <- sapply(out_table, is.numeric)
-  out_table[numeric_cols] <- round(x[numeric_cols], 3)
-
-  return_value <- paste(out_str,collapse = "\n",sep="")
-
-  return_value <- paste(return_value,"\n\n",paste(capture.output(print(out_table)),sep="",collapse = "\n"),sep="",collapse = "\n")
-
-  invisible(return_value)
-}
-
-#' @rdname print
-#' @export
-print.mortaar_life_table_list <- function(x, ...) cat(format(x, ...), "\n")
-
-#' @rdname print
-#' @export
-print.mortaar_life_table <- function(x, ...) cat(format(x, ...), "\n")
-
 #' Plot a mortaar_life_table or a mortaar_life_table_list
 #'
 #' Plot a mortaar_life_table or a mortaar_life_table_list. There are several different kinds of plots
@@ -229,7 +111,7 @@ make_variable_labels <- function() {
 make_ggplot <- function(data, variable_name, variable_labels) {
   my_x <- reshape2::melt(data,id="a",measure.vars=c(variable_name))
   colnames(my_x) <- c("a", "variable", variable_name, "dataset")
-  my_x$a <- unlist(by(my_x$a, my_x$dataset, function(x) cumsum(x)))
+  my_x$a <- unlist(by(my_x$a, my_x$dataset, function(x) cumsum(x))) - my_x$a
   my_plot <- ggplot2::ggplot(my_x, ggplot2::aes_string(x="a",y=variable_name,lty="dataset"))
   my_plot <- my_plot + ggplot2::geom_line() + ggplot2::xlab("age") + ggplot2::ylab(variable_name) + ggplot2::ggtitle(variable_labels[variable_name])
   # check if group attribute is present to pass it on for plot legend title
@@ -249,7 +131,7 @@ make_ggplot <- function(data, variable_name, variable_labels) {
 #'@keywords internal
 
 mortaar_plot_dx <- function(x, lty=1, ...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   lines(my_x,x$dx, lty=lty)
 }
 
@@ -265,7 +147,7 @@ mortaar_plot_dx <- function(x, lty=1, ...) {
 #'@keywords internal
 
 mortaar_plot_dx_frame <- function(x, my_subsets="", n,...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   plot(my_x,x$dx, xlab="age of individuals", ylab="dx",type="n", main="proportion of deaths (dx)", xaxt="n")
   my_ticks = seq(0,ceiling(max(my_x)),by=5)
   axis(1,at=my_ticks, labels=my_ticks)
@@ -283,7 +165,7 @@ mortaar_plot_dx_frame <- function(x, my_subsets="", n,...) {
 #'@keywords internal
 
 mortaar_plot_qx <- function(x, lty=1, ...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   lines(my_x,x$qx, lty=lty)
 }
 
@@ -299,7 +181,7 @@ mortaar_plot_qx <- function(x, lty=1, ...) {
 #'@keywords internal
 
 mortaar_plot_qx_frame <- function(x, my_subsets="", n,...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   plot(my_x,x$qx, xlab="age of individuals", ylab="qx",type="n", main="probability of death (qx)", xaxt="n")
   my_ticks = seq(0,ceiling(max(my_x)),by=5)
   axis(1,at=my_ticks, labels=my_ticks)
@@ -317,7 +199,7 @@ mortaar_plot_qx_frame <- function(x, my_subsets="", n,...) {
 #'@keywords internal
 
 mortaar_plot_lx <- function(x, lty=1, ...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   lines(my_x,x$lx, lty=lty)
 }
 
@@ -335,7 +217,7 @@ mortaar_plot_lx <- function(x, lty=1, ...) {
 #'@keywords internal
 
 mortaar_plot_lx_frame <- function(x, my_subsets="", n,...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   plot(my_x,x$lx, xlab="age of individuals", ylab="lx",type="n", main="survivorship (lx)", xaxt="n")
   my_ticks = seq(0,ceiling(max(my_x)),by=5)
   axis(1,at=my_ticks, labels=my_ticks)
@@ -353,7 +235,7 @@ mortaar_plot_lx_frame <- function(x, my_subsets="", n,...) {
 #'@keywords internal
 
 mortaar_plot_ex <- function(x, lty=1, ...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   lines(my_x,x$ex, lty=lty)
 }
 
@@ -369,7 +251,7 @@ mortaar_plot_ex <- function(x, lty=1, ...) {
 #'@keywords internal
 
 mortaar_plot_ex_frame <- function(x, my_subsets="", n,...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   plot(my_x,x$ex, xlab="age of individuals", ylab="ex",type="n", main="life expectancy (ex)", xaxt="n")
   my_ticks = seq(0,ceiling(max(my_x)),by=5)
   axis(1,at=my_ticks, labels=my_ticks)
@@ -387,7 +269,7 @@ mortaar_plot_ex_frame <- function(x, my_subsets="", n,...) {
 #'@keywords internal
 
 mortaar_plot_rel_popx <- function(x, lty=1, ...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   lines(my_x,x$rel_popx, lty=lty)
 }
 
@@ -403,9 +285,22 @@ mortaar_plot_rel_popx <- function(x, lty=1, ...) {
 #'@keywords internal
 
 mortaar_plot_rel_popx_frame <- function(x, my_subsets="", n,...) {
-  my_x=cumsum(x$a)
+  my_x=mortaar_plot_x_axis(x)
   plot(my_x,x$rel_popx, xlab="age of individuals", ylab="rel_popx",type="n", main="population age structure (rel_popx)", xaxt="n")
   my_ticks = seq(0,ceiling(max(my_x)),by=5)
   axis(1,at=my_ticks, labels=my_ticks)
   legend(x = 'topright', bty='n', paste(my_subsets, " (n=",round(n,3),")",sep=""), lty = 1:length(my_subsets))
+}
+
+#' Calculates the x axis (age) for mortaar life table plots
+#'
+#' Calculates the x axis (age) for mortaar life table plots
+#'
+#' @param x an object of the class mortaar_life_table.
+#'
+#' @return the vector for the x axis
+#'
+#' @keywords internal
+mortaar_plot_x_axis <- function(x) {
+  cumsum(x$a) - x$a
 }
