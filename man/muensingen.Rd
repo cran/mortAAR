@@ -3,13 +3,15 @@
 \name{muensingen}
 \alias{muensingen}
 \title{muensingen: Life table example}
-\format{A data frame with 71 rows and 4 variables.
+\format{
+A data frame with 71 rows and 4 variables.
 \itemize{
   \item \bold{age:} age range of the individual.
   \item \bold{sex:} sex of the individual.
   \item \bold{latene_phase:} archaeological phasing.
   \item \bold{grave_goods:} did the grave contain grave goods?
-}}
+}
+}
 \description{
 A data set from \emph{moghaddam_et_al_muensingen_2016}.
 }
@@ -22,10 +24,13 @@ if the respective burial contained grave goods (yes or no).
 \insertRef{moghaddam_et_al_muensingen_2016}{mortAAR}
 }
 \seealso{
-Other vignette: \code{\link{magdalenenberg}}
-
-Other training: \code{\link{gallery_graves}},
-  \code{\link{magdalenenberg}}
+Other lifetables: 
+\code{\link{aiterhofen_oedmuehlen}},
+\code{\link{gallery_graves}},
+\code{\link{magdalenenberg}},
+\code{\link{nitra}},
+\code{\link{odagsen_cm}},
+\code{\link{odagsen_mo}},
+\code{\link{schleswig_ma}}
 }
-\concept{training}
-\concept{vignette}
+\concept{lifetables}

@@ -1,5 +1,3 @@
-context("as.mortaar_life_table_list")
-
 test_that("as transformation works or fails depending on input dataset", {
   expect_s3_class(
     as.mortaar_life_table_list(list(a_live_table[[1]], a_live_table[[2]])),
@@ -14,8 +12,6 @@ test_that("as transformation works or fails depending on input dataset", {
     NULL
   )
 })
-
-context("as.mortaar_life_table")
 
 test_that("as works or fails depending on input dataset", {
   expect_s3_class(
@@ -32,14 +28,12 @@ test_that("as works or fails depending on input dataset", {
   )
 })
 
-context("is.mortaar_life_table_list")
 
 test_that("a mortaar_life_table_list identifies correctly", {
   expect_true(is.mortaar_life_table_list(a_live_table))
   expect_false(is.mortaar_life_table_list(an_input_dataset))
   })
 
-context("is.mortaar_life_table")
 
 test_that("a mortaar_life_table_list identifies correctly", {
   expect_true(is.mortaar_life_table(a_live_table$schleswig_ma))
@@ -47,35 +41,32 @@ test_that("a mortaar_life_table_list identifies correctly", {
   expect_false(is.mortaar_life_table(an_input_dataset))
 })
 
-context("format.mortaar_life_table_list")
 
 test_that("format is delegated to format.mortaar_life_table_list on a mortaar_life_table_list", {
   expect_match(format(a_live_table), "mortAAR")
 })
 
 test_that("format.mortaar_life_table_list returns a character string", {
-  expect_is(format(a_live_table),"character")
+  expect_type(format(a_live_table),"character")
 })
 
 test_that("format.mortaar_life_table_list returns no output", {
   expect_silent(format(a_live_table))
 })
 
-context("format.mortaar_life_table")
 
 test_that("format is delegated to format.mortaar_life_table on a mortaar_life_table", {
   expect_match(format(a_live_table$schleswig_ma), "mortAAR")
 })
 
 test_that("format.mortaar_life_table returns a character string", {
-  expect_is(format(a_live_table$schleswig_ma),"character")
+  expect_type(format(a_live_table$schleswig_ma),"character")
 })
 
 test_that("format.mortaar_life_table returns no output", {
   expect_silent(format(a_live_table$schleswig_ma))
 })
 
-context("print.mortaar_life_table")
 
 test_that("print is delegated to print.mortaar_life_table on a mortaar_life_table", {
   expect_output(print(a_live_table$schleswig_ma), "mortAAR")
@@ -89,7 +80,6 @@ test_that("print is delegated to print.mortaar_life_table on a mortaar_life_tabl
 #   expect_output(print(this_life_table), "0-1")
 # })
 
-context("print.mortaar_life_table_list")
 
 test_that("print is delegated to print.mortaar_life_table_list on a mortaar_life_table_list", {
   expect_output(print(a_live_table), "mortAAR")
@@ -108,10 +98,10 @@ pdf(file = NULL)
 
 # Dummy test for plots
 
-context("plot.mortaar_life_table_list")
 
 test_that("plot produces no error", {
   expect_error(plot( a_live_table, display = "dx" ), NA)
+  expect_error(plot( a_live_table, display = "dx", line_vis = "colour" ), NA)
   expect_error(plot( a_live_table, display = "qx" ), NA)
   expect_error(plot( a_live_table, display = "lx" ), NA)
   expect_error(plot( a_live_table, display = "ex" ), NA)
@@ -130,10 +120,10 @@ test_that("plot life table list produces no error", {
   expect_error(plot( a_live_table) , NA)
 })
 
-context("plot.mortaar_life_table")
 
 test_that("plot produces no error", {
   expect_error(plot( a_live_table$schleswig_ma, display = "dx" ), NA)
+  expect_error(plot( a_live_table$schleswig_ma, display = "dx", line_vis = "colour" ), NA)
   expect_error(plot( a_live_table$schleswig_ma, display = "qx" ), NA)
   expect_error(plot( a_live_table$schleswig_ma, display = "lx" ), NA)
   expect_error(plot( a_live_table$schleswig_ma, display = "ex" ), NA)

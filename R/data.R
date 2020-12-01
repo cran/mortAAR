@@ -52,7 +52,7 @@ NULL
 #'   \item \bold{site:} collective grave.
 #' }
 #'
-#' @family training
+#' @family lifetables
 #'
 #' @name gallery_graves
 NULL
@@ -108,8 +108,7 @@ NULL
 #'   \item \bold{Dx:} number of deceased.
 #' }
 #'
-#' @family vignette
-#' @family training
+#' @family lifetables
 #'
 #' @name magdalenenberg
 NULL
@@ -133,8 +132,7 @@ NULL
 #'   \item \bold{grave_goods:} did the grave contain grave goods?
 #' }
 #'
-#' @family vignette
-#' @family training
+#' @family lifetables
 #'
 #' @name muensingen
 NULL
@@ -223,3 +221,31 @@ NULL
 #' @name odagsen_mo
 NULL
 
+#' nitra: Life table example
+#'
+#' The Early Neolithic cemetery of Nitra is one of the best published
+#' data sets of the \emph{Linearbandkeramik} (LBK). The individuals were
+#' analysed by J. Jelínek (published in \emph{Pavúk 1972}) and many
+#' decades later also bei L. Fibiger (\emph{Bickle/Whittle 2013}, 139ff.
+#' Tab. 4.15) and in more detail by Z. \emph{Tvrdý 2016}. We follow here
+#' the determinations by L. Fibiger.
+#'
+#' @references
+#' \insertRef{pavuk_1972}{mortAAR}
+#'
+#' \insertRef{LBK_lifeways}{mortAAR}
+#'
+#' \insertRef{tvrdy_2016}{mortAAR}
+#'
+#' @format A data frame with 4 variables and 75 observations
+#' \itemize{
+#'   \item \bold{no:} individual
+#'   \item \bold{sex:} sex determination if available
+#'   \item \bold{age_start:} start of the ageing interval
+#'   \item \bold{age_end:} end of the ageing interval (inclusive)
+#' }
+#'
+#' @family lifetables
+#'
+#' @name nitra
+NULL

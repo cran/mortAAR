@@ -3,7 +3,8 @@
 \name{odagsen_cm}
 \alias{odagsen_cm}
 \title{odagsen_corpus.mandibulae: Life table example}
-\format{A data frame with 11 rows and 9 variables.
+\format{
+A data frame with 11 rows and 9 variables.
 \itemize{
   \item \bold{age.group:} inf.I, inf.II -> Infans I, II
                   juv -> juvenil;
@@ -24,7 +25,8 @@ the remaining survivors of each age interval ("Zahl der Lebenden
 bezogen auf die theoretische Ausgangspopulation zwischen zwei
 aufeinanderfolgenden Intervallen").
 For further information about the values see the
-documentation of \code{\link{life.table}}.}
+documentation of \code{\link{life.table}}.
+}
 \description{
 A life table from \emph{Grupe/Herrmann 1986, 51}.
 }
@@ -39,7 +41,13 @@ the published original data in \emph{Grupe/Herrmann 1986}.
 \insertRef{rinne_odagsen_2002}{mortAAR}
 }
 \seealso{
-Other lifetables: \code{\link{aiterhofen_oedmuehlen}},
-  \code{\link{odagsen_mo}}, \code{\link{schleswig_ma}}
+Other lifetables: 
+\code{\link{aiterhofen_oedmuehlen}},
+\code{\link{gallery_graves}},
+\code{\link{magdalenenberg}},
+\code{\link{muensingen}},
+\code{\link{nitra}},
+\code{\link{odagsen_mo}},
+\code{\link{schleswig_ma}}
 }
 \concept{lifetables}

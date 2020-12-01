@@ -1,3 +1,4 @@
+[![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
 [![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/mortAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/mortAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/mortAAR/master.svg)](https://codecov.io/github/ISAAKiel/mortAAR?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mortAAR)](https://CRAN.R-project.org/package=mortAAR)
 [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-3)
@@ -24,11 +25,12 @@ For further information, please have a look at the Vignettes and the Manual.
 Installation
 ------------
 
-`mortAAR` is available on [CRAN](https://CRAN.R-project.org/package=mortAAR) and can be installed through `install.packages("mortAAR")`. You can use [devtools](https://CRAN.R-project.org/package=devtools) to install the development version. To do so:
+`mortAAR` is available on [CRAN](https://CRAN.R-project.org/package=mortAAR) and can be installed through `install.packages("mortAAR")`. You can also install the development version with:
 
-    if(!require('devtools')) install.packages('devtools')
-    library(devtools)
-    install_github('ISAAKiel/mortAAR')
+```
+if(!require('remotes')) install.packages('remotes')
+remotes::install_github('ISAAKiel/mortAAR', build_vignettes = TRUE)
+```
 
 Licence
 -------
