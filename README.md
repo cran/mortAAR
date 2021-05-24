@@ -1,6 +1,8 @@
-[![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
-[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/mortAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/mortAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/mortAAR/master.svg)](https://codecov.io/github/ISAAKiel/mortAAR?branch=master)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/mortAAR/master.svg)](https://codecov.io/github/ISAAKiel/mortAAR?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mortAAR)](https://CRAN.R-project.org/package=mortAAR)
+[![](http://cranlogs.r-pkg.org/badges/mortAAR)](https://CRAN.R-project.org/package=mortAAR)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mortAAR)](https://CRAN.R-project.org/package=mortAAR)
 [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-3)
 
 mortAAR
@@ -20,7 +22,7 @@ In our view, `mortAAR` shines in the following areas:
 - Sophisticated means of computation (exploding of age ranges, separation factor for average lived years)
 - Comprehensiveness of output (life tables for all groups specified, plots for the most important measures, relative population calculation)
 
-For further information, please have a look at the Vignettes and the Manual. 
+For further information, please have a look at the Vignettes – [Basic usage](https://CRAN.R-project.org/package=mortAAR/vignettes/mortAAR_vignette-1.html), [Extended discussion](https://CRAN.R-project.org/package=mortAAR/vignettes/mortAAR_vignette_extended.html), [Life table correction](https://CRAN.R-project.org/package=mortAAR/vignettes/mortAAR_vignette_lt_correction.html) and [Reproduction](https://CRAN.R-project.org/package=mortAAR/vignettes/mortAAR_vignette_reproduction.html) – and the [Manual](https://CRAN.R-project.org/package=mortAAR/mortAAR.pdf). 
 
 Installation
 ------------
