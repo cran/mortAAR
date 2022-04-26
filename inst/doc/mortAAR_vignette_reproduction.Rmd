@@ -4,7 +4,6 @@ author: "Nils Müller-Scheeßel"
 date: "December 2020"
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
-csl: "`r library(RCurl); ifelse(url.exists('https://www.zotero.org/styles/offa'), 'https://www.zotero.org/styles/offa', '')`"
 vignette: >
   %\VignetteIndexEntry{Vignette >Reproduction<}
   %\VignetteEngine{knitr::rmarkdown}
@@ -186,6 +185,12 @@ The simple formula is as follows:
 $P = \frac{D\; *\; e0\; *\; k}{t}$
 
 This time, we use all individuals from Nitra to calculate the size of the population burying their dead here.
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+knitr::knit_engines$set(oxcal = function(options) {
+ # no changes
+})
+```
 
 ```{oxcal}
  Sequence()
