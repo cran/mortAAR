@@ -481,6 +481,9 @@ data published by McFadden and Oxenham to apply it to the <span class="math inli
 <span class="citation">(2002)</span>. We approximated the ratio by three
 different methods of fitting (linear, logistic, power) and recommend
 logistic fitting, but the others are available as well.</p>
+<p>Even more recently, B. Taylor, M. Oxenham and C. McFadden <span class="citation">(2023)</span> have presented a formula for the Total
+fertility rate for cases where pre-adult individuals are known to be
+underrepresented.</p>
 <p>The Gross reproduction rate (GRR) is calculated by multiplying the
 TFR with the ratio of female newborns, assumed to be a constant of 48.8%
 of all children <span class="citation">(Hassan 1981, 136)</span>. The
@@ -528,7 +531,24 @@ have had 1.17 daughters who in turn would have had children. This
 translates to a Rate of natural increase of 0.79%: Every year the
 Schleswig population would have increased by roughly 0.8% and with
 stable growth would have doubled every 88 years.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr, <span class="at">fertility_rate =</span> <span class="st">&quot;McFO&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">fertility_rate =</span> <span class="st">&quot;TOMc&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
+<pre><code>##    method value              description
+## 3     TFR  6.92     Total fertility rate
+## 4     GRR  3.38  Gross reproduction rate
+## 5     NRR  1.67    Net reproduction rate
+## 6       r  2.56 Rate of natural increase
+## 7      Dt 27.04   Doubling time in years
+## 8  D30_D5  0.57           ratio D30+/D5+
+## 9      BR  6.20               Birth rate
+## 10     DR  3.18               Death rate</code></pre>
+<p>The index of Taylor et al., which concentrates on the adult
+population only (age 15 and above), arrives at a much higher estimate
+for the Total fertility rate. This is computed with 6.92, and therefore
+also the Gross reproduction rate, the Net reproduction rate and the Rate
+of natural increase are higher than with the McFadden/Oxenham-index.
+Conversely, the doubling time of the population is with 27.04 years much
+lower.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr, <span class="at">fertility_rate =</span> <span class="st">&quot;McFO&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
 <pre><code>##    method  value              description
 ## 3     TFR   6.53     Total fertility rate
 ## 4     GRR   3.19  Gross reproduction rate
@@ -538,16 +558,16 @@ stable growth would have doubled every 88 years.</p>
 ## 8  D30_D5   0.38           ratio D30+/D5+
 ## 9      BR   8.34               Birth rate
 ## 10     DR   4.17               Death rate</code></pre>
-<p>As stated above, the index assumes, somehow unrealistically, that the
-youngest age-groups are fully represented in the skeletal population. If
-we apply the life table corrections as advised by C. Masset and J.-P.
-Bocquet-Appel via the function <code>lt.correction</code> (see vignette
-“Life table corrections”), the values change dramatically. The Total
-fertility and Gross reproduction rates increase, but because of the much
-higher mortality among the youngest, the Net reproduction rate and thus
-the Rate of natural increase shrink. The doubling time is extended to
-nearly 250 years.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">fertility_rate =</span> <span class="st">&quot;BA_log&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
+<p>As stated above, the McFadden/Oxenham-index assumes, somehow
+unrealistically, that the youngest age-groups are fully represented in
+the skeletal population. If we apply the life table corrections as
+advised by C. Masset and J.-P. Bocquet-Appel via the function
+<code>lt.correction</code> (see vignette “Life table corrections”), the
+values change dramatically. The Total fertility and Gross reproduction
+rates increase, but because of the much higher mortality among the
+youngest, the Net reproduction rate and thus the Rate of natural
+increase shrink. The doubling time is extended to nearly 250 years.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">fertility_rate =</span> <span class="st">&quot;BA_log&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
 <pre><code>##    method value              description
 ## 3     TFR  7.01     Total fertility rate
 ## 4     GRR  3.42  Gross reproduction rate
@@ -562,7 +582,7 @@ at a Total fertility rate of around 7, also in line with the expectation
 (see above). This higher value, not surprisingly, leads to much higher
 numbers in all the other indices, including a much higher Rate of
 natural increase and a much shorter doubling time of only 26 years.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr, <span class="at">fertility_rate =</span> <span class="st">&quot;BA_log&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr, <span class="at">fertility_rate =</span> <span class="st">&quot;BA_log&quot;</span>, <span class="at">growth_rate =</span> <span class="st">&quot;fertility&quot;</span>)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>),]</span></code></pre></div>
 <pre><code>##    method  value              description
 ## 3     TFR   7.01     Total fertility rate
 ## 4     GRR   3.42  Gross reproduction rate
@@ -578,7 +598,7 @@ reproduction rates do not change if the life table correction is
 applied. Still, the other values are affected, and the Net reproduction
 rate decreases to 1.13. The Rate of natural increase is then 0.63 and
 the doubling time 110 years.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">growth_rate =</span> <span class="st">&quot;MBA&quot;</span>)[<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">7</span>),]</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">growth_rate =</span> <span class="st">&quot;MBA&quot;</span>)[<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">7</span>),]</span></code></pre></div>
 <pre><code>##   method    value              description
 ## 6      r     0.00 Rate of natural increase
 ## 7     Dt 26163.39   Doubling time in years</code></pre>
@@ -586,7 +606,7 @@ the doubling time 110 years.</p>
 devised by Masset and Bocquet-Appel, the picture changes again: Now the
 Rate of natural increase is virtually zero, the population stationary
 and the doubling time more than 25000 years.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">growth_rate =</span> <span class="st">&quot;McFO&quot;</span>)[<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">7</span>),]</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig, <span class="at">growth_rate =</span> <span class="st">&quot;McFO&quot;</span>)[<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">7</span>),]</span></code></pre></div>
 <pre><code>##   method value              description
 ## 6      r  1.81 Rate of natural increase
 ## 7     Dt 38.27   Doubling time in years</code></pre>
@@ -596,11 +616,11 @@ of 38 years.</p>
 <p>In sum, the differing outcomes underline the importance of the
 fertility and the mortality among the youngest for the growth direction
 of a given population. Following Hassan <span class="citation">(1981,
-140)</span>, one would credit the corrected McFO-fertility rate to
-produce the most probable result as Hassan deems a growth rate of 0.5%
-per year as the maximum for prehistoric populations. On the other hand,
-also growth rates of 2.7% per year are known from ethnographic cases
-<span class="citation">(Hassan 1981, 142)</span>.</p>
+140)</span>, one would credit the McFO-fertility index with lifetable
+correction after Masset and Bocquet-Appel to produce the most probable
+result as Hassan deems a growth rate of 0.5% per year as the maximum for
+prehistoric populations. On the other hand, also growth rates of 2.7%
+per year are known from ethnographic cases <span class="citation">(Hassan 1981, 142)</span>.</p>
 </div>
 <div id="rate-of-dependent-individuals" class="section level3">
 <h3>Rate of dependent individuals</h3>
@@ -611,8 +631,8 @@ erroneously for archaic societies Grupe, Harbeck, and McGlynn 2015,
 this is put into relation of the individuals aged in-between:</p>
 <p><span class="math inline">\(DR = \frac{\sum{D_{0-14}} +
 \sum{D_{60+}}}{\sum{D_{15--59}}}\)</span></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>schleswig <span class="ot">&lt;-</span> <span class="fu">life.table</span>(schleswig_ma[<span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;Dx&quot;</span>)])</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig)[<span class="dv">2</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>schleswig <span class="ot">&lt;-</span> <span class="fu">life.table</span>(schleswig_ma[<span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;Dx&quot;</span>)])</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">lt.reproduction</span>(schleswig)[<span class="dv">2</span>,]</span></code></pre></div>
 <pre><code>##   method  value      description
 ## 2    dep 105.83 Dependency ratio</code></pre>
 <p>The example dataset of the Schleswig produces a Dependency ratio of
@@ -621,7 +641,7 @@ roughly as much dependent individuals as those available to support
 them. This number even doubles if we apply the life table corrections
 devised by C. Masset and J.-P. Bocquet-Appel via the function
 <code>lt.correction</code> (see vignette “Life table corrections”).</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr)[<span class="dv">2</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">lt.reproduction</span>(<span class="fu">lt.correction</span>(schleswig)<span class="sc">$</span>life_table_corr)[<span class="dv">2</span>,]</span></code></pre></div>
 <pre><code>##   method  value      description
 ## 2    dep 206.75 Dependency ratio</code></pre>
 </div>
@@ -642,9 +662,9 @@ mobility.</p></li>
 does not necessarily speak for an unbalanced MI in life.</p>
 <p>As example, we choose the Early Neolithic cemetery of Nitra in
 Slovakia.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>nitra_prep <span class="ot">&lt;-</span> <span class="fu">prep.life.table</span>(nitra, <span class="at">group=</span><span class="st">&quot;sex&quot;</span>, <span class="at">agebeg =</span> <span class="st">&quot;age_start&quot;</span>, <span class="at">ageend =</span> <span class="st">&quot;age_end&quot;</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>nitra_life <span class="ot">&lt;-</span> <span class="fu">life.table</span>(nitra_prep)</span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="fu">lt.sexrelation</span>(nitra_life<span class="sc">$</span>f, nitra_life<span class="sc">$</span>m)[<span class="dv">1</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>nitra_prep <span class="ot">&lt;-</span> <span class="fu">prep.life.table</span>(nitra, <span class="at">group=</span><span class="st">&quot;sex&quot;</span>, <span class="at">agebeg =</span> <span class="st">&quot;age_start&quot;</span>, <span class="at">ageend =</span> <span class="st">&quot;age_end&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>nitra_life <span class="ot">&lt;-</span> <span class="fu">life.table</span>(nitra_prep)</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="fu">lt.sexrelation</span>(nitra_life<span class="sc">$</span>f, nitra_life<span class="sc">$</span>m)[<span class="dv">1</span>,]</span></code></pre></div>
 <pre><code>##   method value       description
 ## 1     MI  0.67 Masculinity index</code></pre>
 <p>The first row of the function <code>lt.sexrelation</code> reports the
@@ -670,7 +690,7 @@ terms of the relation between male and female individuals.</p>
 <p><span class="math inline">\(Stabilized\; MMR = 333.33 *
 \frac{D_{20-24_{female}}}{D_{20-24_{male}}} *
 \frac{D_{15+_{male}}}{D_{15+_{female}}} - 76.07\)</span></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">lt.sexrelation</span>(nitra_life<span class="sc">$</span>f, nitra_life<span class="sc">$</span>m)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>),]</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">lt.sexrelation</span>(nitra_life<span class="sc">$</span>f, nitra_life<span class="sc">$</span>m)[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>),]</span></code></pre></div>
 <pre><code>##      method  value                           description
 ## 2 Ratio_F_M   2.36 Ratio of females to males aged 20--24
 ## 3      MMR1 449.00 Maternal mortality per 100,000 births
@@ -716,14 +736,14 @@ indicates that the cemetery was used for 147 years. However, the actual
 95.4%-span is 0–260 years, and a strong wiggle in-between probably
 distorts the picture. Therefore, 80 years could be a more realistic
 value.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">lt.population_size</span>(nitra_life<span class="sc">$</span>All,<span class="at">t =</span> <span class="dv">147</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">lt.population_size</span>(nitra_life<span class="sc">$</span>All,<span class="at">t =</span> <span class="dv">147</span>)</span></code></pre></div>
 <pre><code>##   method value       description
 ## 1      D  75.0  Number of deaths
 ## 2     e0  28.5   Life expectancy
 ## 3      k   1.1 Correction factor
 ## 4      t 147.0         Time span
 ## 5      P  16.0   Population size</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">lt.population_size</span>(nitra_life<span class="sc">$</span>All,<span class="at">t =</span> <span class="dv">80</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">lt.population_size</span>(nitra_life<span class="sc">$</span>All,<span class="at">t =</span> <span class="dv">80</span>)</span></code></pre></div>
 <pre><code>##   method value       description
 ## 1      D  75.0  Number of deaths
 ## 2     e0  28.5   Life expectancy
@@ -812,6 +832,12 @@ Gained: Histories of Population and Social Structure. Essays Presented
 to Peter Laslett on His Seventh Birthday</span></em>, edited by Lloyd
 Bonfield, Richard M. Smith, and Keith Wrightson, 231–60. Oxford: Basil
 Blackwell.
+</div>
+<div id="ref-taylor_et_al_2023" class="csl-entry">
+Taylor, B. R., M. Oxenham, and C. McFadden. 2023. <span>“<span class="nocase">Estimating fertility using adults: A method for
+under-enumerated pre-adult skeletal samples</span>.”</span>
+<em><span>American Journal of Biological Anthropology</span></em> 181
+(2): 262–70. <a href="https://doi.org/10.1002/ajpa.24739">https://doi.org/10.1002/ajpa.24739</a>.
 </div>
 </div>
 </div>
